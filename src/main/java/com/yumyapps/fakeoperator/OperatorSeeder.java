@@ -7,6 +7,10 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.yumyapps.fakeoperator.employee.Address;
+import com.yumyapps.fakeoperator.employee.Employee;
+import com.yumyapps.fakeoperator.employee.EmployeeRepository;
+import com.yumyapps.fakeoperator.employee.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -21,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
@@ -32,6 +37,8 @@ public class OperatorSeeder {
     @Autowired
     ServiceManagerRepository serviceManagerRepository;
 
+    @Autowired
+    EmployeeRepository employeeRepository;
     @Autowired
     UserRepository userRepository;
 
@@ -60,7 +67,34 @@ public class OperatorSeeder {
 
     }
 
-    @EventListener
+
+//    @EventListener
+    public void addEmployee(ApplicationReadyEvent event) {
+        Faker faker = new Faker();
+        for (int i = 0; i < 10; i++) {
+
+            var emp = Employee.builder()
+                    .name(faker.name().fullName())
+                    .build();
+
+            emp.setAddresses(Set.of(
+                    Address.builder()
+                            .street(faker.address().streetAddress())
+                            .city(faker.address().cityName())
+                            .employee(emp)
+                            .build(),
+                    Address.builder()
+                            .street(faker.address().streetAddress())
+                            .city(faker.address().cityName())
+                            .employee(emp)
+                            .build()));
+
+            employeeRepository.save(emp);
+
+        }
+    }
+
+    //    @EventListener
     public void seedUser(ApplicationReadyEvent event) {
 
         Faker faker = new Faker();

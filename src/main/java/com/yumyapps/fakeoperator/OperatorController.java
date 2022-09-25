@@ -1,6 +1,5 @@
 package com.yumyapps.fakeoperator;
 
-import com.opencsv.CSVWriter;
 import com.opencsv.ICSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
