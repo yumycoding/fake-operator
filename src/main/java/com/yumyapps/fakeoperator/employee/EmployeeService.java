@@ -1,6 +1,7 @@
 package com.yumyapps.fakeoperator.employee;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,10 +19,12 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
+//    @Cacheable(cacheNames = "employeeCache")
     public Employee findEmployeeById(Long empId) {
         return employeeRepository.findById(empId).orElseThrow(EntityNotFoundException::new);
     }
 
+//    @Cacheable(cacheNames = "employeeCache")
     public List<Employee> findAllEmployees() {
         return employeeRepository.findAll();
     }

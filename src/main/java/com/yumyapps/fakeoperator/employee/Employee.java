@@ -1,8 +1,10 @@
 package com.yumyapps.fakeoperator.employee;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -19,13 +21,16 @@ public class Employee {
 
     private String name;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDateTime dateTime;
+
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Address> addresses;
 
     public void addAddress(Address address) {
         if (address.isNew()) {
-            getAddresses().add(address);
             address.setEmployee(this);
+            getAddresses().add(address);
         }
     }
 

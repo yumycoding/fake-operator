@@ -1,10 +1,12 @@
 package com.yumyapps.fakeoperator.employee;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -14,7 +16,7 @@ public class EmployeeController {
 
 
     private final EmployeeService employeeService;
-
+    private final EmployeeRepository employeeRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<Employee>> findAllEmployees() {
@@ -48,6 +50,23 @@ public class EmployeeController {
     @GetMapping(path = "/find-address")
     private ResponseEntity<Address> findAddress(@RequestParam("id") Long id) {
         return new ResponseEntity<>(employeeService.findAddressById(id), HttpStatus.FOUND);
+    }
+
+
+    @GetMapping(path = "/find")
+    private ResponseEntity<List<Employee>> findByDate(
+            @RequestParam("date")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
+        System.out.println(dateTime);
+        return new ResponseEntity<>(employeeRepository.findByDateTime(dateTime), HttpStatus.FOUND);
+    }
+
+    @GetMapping(path = "/between")
+    private ResponseEntity<List<Employee>> findBetweenDates(
+            @RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+            @RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
+
+        return new ResponseEntity<>(employeeRepository.findByDateTimeBetween(startDateTime, endDateTime), HttpStatus.FOUND);
     }
 
 }
